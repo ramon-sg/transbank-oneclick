@@ -1,0 +1,28 @@
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+*.bundle
+*.so
+*.o
+*.a
+mkmf.log
+
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
