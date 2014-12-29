@@ -52,7 +52,7 @@ module Transbank
         end
 
         def build_params(hash)
-          hash.map {|k, v| [ATTRIBUTES.fetch(k.to_sym, k), v]}.to_h
+          Hash[*hash.map{|k, v| [ATTRIBUTES.fetch(k.to_sym, k), v]}.flatten]
         end
     end
   end

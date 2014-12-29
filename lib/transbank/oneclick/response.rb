@@ -21,7 +21,7 @@ module Transbank
       def initialize(content, action)
         self.content = content
         self.action = action
-        self.attributes = xml_result.map{|e| [e.name.underscore.to_sym, e.text]}.to_h
+        self.attributes = Hash[*xml_result.map{|e| [e.name.underscore.to_sym, e.text]}.flatten]
         self.errors = []
         validate!
       end
