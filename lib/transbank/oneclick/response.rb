@@ -4,18 +4,24 @@ module Transbank
       attr_accessor :content, :action, :attributes, :errors, :exception
 
       RESPONSE_CODE = {
-        '0'   => 'aprobado',
-        '-1'  => 'rechazo',
-        '-2'  => 'rechazo',
-        '-3'  => 'rechazo',
-        '-4'  => 'rechazo',
-        '-5'  => 'rechazo',
-        '-6'  => 'rechazo',
-        '-7'  => 'rechazo',
-        '-8'  => 'rechazo',
-        '-97' => 'limites Oneclick, máximo monto diario de pago excedido',
-        '-98' => 'limites Oneclick, máximo monto de pago excedido',
-        '-99' => 'limites Oneclick, máxima cantidad de pagos diarios excedido'
+        authorize: {
+          '0'   => 'aprobado',
+          '-1'  => 'rechazo',
+          '-2'  => 'rechazo',
+          '-3'  => 'rechazo',
+          '-4'  => 'rechazo',
+          '-5'  => 'rechazo',
+          '-6'  => 'rechazo',
+          '-7'  => 'rechazo',
+          '-8'  => 'rechazo',
+          '-97' => 'limites Oneclick, máximo monto diario de pago excedido',
+          '-98' => 'limites Oneclick, máximo monto de pago excedido',
+          '-99' => 'limites Oneclick, máxima cantidad de pagos diarios excedido'
+        },
+        default: {
+          '0'   => 'aprobado',
+          '-98' => 'Error'
+        }
       }
 
       def initialize(content, action)
@@ -55,7 +61,11 @@ module Transbank
       end
 
       def response_code_display
-        RESPONSE_CODE.fetch(response_code, response_code)
+        if respond_to?(:response_code)
+          # key = RESPONSE_CODE.keys.include?(action) ? action : :default
+          # RESPONSE_CODE[key].fetch(response_code, response_code)
+          RESPONSE_CODE[action] && RESPONSE_CODE[action][response_code] || RESPONSE_CODE[:default][response_code] || response_code
+        end
       end
 
       def inspect
@@ -87,7 +97,7 @@ module Transbank
         end
 
         def validate!
-          if action =~ /finishInscription|Authorize/ and respond_to?(:response_code) and response_code != '0'
+          if action =~ /finishInscription|Authorize|/ and respond_to?(:response_code) and response_code != '0'
             self.errors << response_code_display
           end
 
@@ -101,6 +111,7 @@ module Transbank
 
           if content.class != Net::HTTPOK
             self.errors += xml_error.map(&:text)
+            self.errors << content.message if content.respond_to?(:message)
           end
         end
     end
