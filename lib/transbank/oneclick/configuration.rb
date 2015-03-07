@@ -8,7 +8,7 @@ module Transbank
       attr_accessor :http_options
 
       def initialize
-        self.rescue_exceptions = [Net::ReadTimeout, Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
+        self.rescue_exceptions = [Net::ReadTimeout, Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadGateway,
                                   Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError]
         self.http_options = {}
       end
