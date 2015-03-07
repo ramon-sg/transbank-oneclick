@@ -10,7 +10,9 @@ module Transbank
         self.http = Net::HTTP.new uri.host, uri.port
 
         # load options
-        opt.each {|attr, value| http.__send__("#{attr}=", value)}
+        set_options(opt)
+
+        # default options
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
@@ -18,6 +20,11 @@ module Transbank
       def post(xml_canonicalize)
         http.post(uri.path, xml_canonicalize, HEADER)
       end
+
+      private
+        def set_options(opt =  {})
+          opt.each {|attr, value| http.__send__("#{attr}=", value)}
+        end
     end
   end
 end

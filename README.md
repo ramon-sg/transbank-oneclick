@@ -138,9 +138,6 @@ Transbank::Oneclick.configure do |config|
   config.key_path  = "RELATIVE_PATH_TO_KEY_FILE"
 end
 ```
-## TODO
--	Testing, testing, testing
-- Refactoring
 
 ## Contributing
 
