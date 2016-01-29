@@ -13,7 +13,7 @@ module Transbank
         # authorize
         amount:     :amount,
         tbk_user:   :tbkUser,
-        username:   :username,
+        # username:   :username,
         buy_order:  :buyOrder,
 
         # code_reverse_one_click
