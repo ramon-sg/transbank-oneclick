@@ -60,6 +60,18 @@ module Transbank
         errors.empty?
       end
 
+      def signed_node
+        doc.at_xpath '//ds:SignedInfo', {'ds' => 'http://www.w3.org/2000/09/xmldsig#'}
+      end
+
+      def signature_node
+        doc.at_xpath('//ds:SignatureValue', {'ds' => 'http://www.w3.org/2000/09/xmldsig#'})
+      end
+
+      def signature_decode
+        Base64.decode64(signature_node.content)
+      end
+
       def response_code_display
         if respond_to?(:response_code)
           # key = RESPONSE_CODE.keys.include?(action) ? action : :default
@@ -92,28 +104,50 @@ module Transbank
       end
 
       private
-        def attributes_display
-          attributes.map{|name, value| "#{name}: \"#{value}\""}.join ', '
+
+      def verify
+        return if signature_node.nil?
+
+        signed_node.add_namespace 'soap', 'http://schemas.xmlsoap.org/soap/envelope/'
+        signed_node_canonicalize = signed_node.canonicalize Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0, ["soap"], nil
+
+        pub_key.verify OpenSSL::Digest::SHA1.new, signature_decode, signed_node_canonicalize
+      end
+
+      def server_cert
+        @server_cert ||= OpenSSL::X509::Certificate.new File.read(Transbank::Oneclick.configuration.server_cert_path)
+      end
+
+      def pub_key
+        server_cert.public_key
+      end
+
+      def attributes_display
+        attributes.map{|name, value| "#{name}: \"#{value}\""}.join ', '
+      end
+
+      def validate!
+        if action =~ /finishInscription|Authorize|/ and respond_to?(:response_code) and response_code != '0'
+          self.errors << response_code_display
         end
 
-        def validate!
-          if action =~ /finishInscription|Authorize|/ and respond_to?(:response_code) and response_code != '0'
-            self.errors << response_code_display
-          end
-
-          if action =~ /removeUser/ and respond_to?(:text) and text != 'true'
-            self.errors << 'imposible eliminar la inscripción'
-          end
-
-          if action =~ /codeReverseOneClick/ and respond_to?(:reversed) and reversed != 'true'
-            self.errors << 'imposible revertir la compra'
-          end
-
-          if content.class != Net::HTTPOK
-            self.errors += xml_error.map(&:text)
-            self.errors << content.message if content.respond_to?(:message)
-          end
+        if action =~ /removeUser/ and respond_to?(:text) and text != 'true'
+          self.errors << 'imposible eliminar la inscripción'
         end
+
+        if action =~ /codeReverseOneClick/ and respond_to?(:reversed) and reversed != 'true'
+          self.errors << 'imposible revertir la compra'
+        end
+
+        if content.class != Net::HTTPOK
+          self.errors += xml_error.map(&:text)
+          self.errors << content.message if content.respond_to?(:message)
+        end
+
+        if (self.errors.blank? || signature_node.present?) && !verify
+          raise Exceptions::InvalidSignature.new("Invalid signature")
+        end
+      end
     end
   end
 end
