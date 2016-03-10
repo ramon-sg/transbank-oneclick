@@ -10,6 +10,7 @@ require "transbank/oneclick/request"
 require "transbank/oneclick/response"
 require "transbank/oneclick/exception_response"
 require "transbank/oneclick/configuration"
+require "transbank/oneclick/exceptions"
 
 module Transbank
   module Oneclick

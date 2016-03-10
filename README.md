@@ -133,9 +133,10 @@ Then edit (config/initializers/transbank_oneclick.rb):
 
 ```ruby
 Transbank::Oneclick.configure do |config|
-  config.url       = "ONECLICK_SOAP_URL"
-  config.cert_path = "RELATIVE_PATH_TO_CRT_FILE"
-  config.key_path  = "RELATIVE_PATH_TO_KEY_FILE"
+  config.url               = "ONECLICK_SOAP_URL"
+  config.cert_path         = "RELATIVE_PATH_TO_CRT_FILE"
+  config.key_path          = "RELATIVE_PATH_TO_KEY_FILE"
+  config.server_cert_path  = "RELATIVE_PATH_TO_SERVER_CRT_FILE"
 end
 ```
 

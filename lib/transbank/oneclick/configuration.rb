@@ -4,6 +4,7 @@ module Transbank
       attr_accessor :url
       attr_accessor :cert_path
       attr_accessor :key_path
+      attr_accessor :server_cert_path
       attr_accessor :rescue_exceptions
       attr_accessor :http_options
 
