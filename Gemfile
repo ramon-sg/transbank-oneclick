@@ -10,4 +10,5 @@ group :development, :test do
   gem 'guard'
   gem 'rb-readline'
   gem 'guard-minitest'
+  gem 'minitest-reporters'
 end
