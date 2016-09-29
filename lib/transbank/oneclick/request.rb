@@ -12,6 +12,13 @@ module Transbank
         self.action = action
         self.rescue_exceptions = opt[:rescue_exceptions]
         self.xml = Document.new(action, params)
+
+        logger = Transbank::Oneclick.configuration.logger
+        if logger
+          logger.info "Transbank #{action} request"
+          logger.info xml.doc.to_s
+        end
+
         self.client = Client.new opt.delete(:http_options)
       end
 
