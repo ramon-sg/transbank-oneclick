@@ -151,6 +151,7 @@ end
 ```
 
 That log file will be then written with every resulting xml from each api call, both request and response.
+Note: Log level used is **info**.
 
 ## Contributing
 
