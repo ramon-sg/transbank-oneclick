@@ -1,3 +1,6 @@
+# Deprecation Notice:
+This SDK is deprecated. For alternatives, please visit [•tbk. | DEVELOPERS - Documentación](https://www.transbankdevelopers.cl/documentacion/oneclick#crear-una-inscripcion)
+
 # Transbank::Oneclick
 
 Ruby Implementation of Transbank Oneclick API SOAP
