@@ -143,6 +143,19 @@ Transbank::Oneclick.configure do |config|
 end
 ```
 
+**Logging**
+
+Pass a logger object in the configuration pointing to a log file and any options you need:
+
+```ruby
+Transbank::Oneclick.configure do |config|
+  config.logger = Logger.new("RELATIVE_PATH_TO_LOG_FILE")
+end
+```
+
+That log file will be then written with every resulting xml from each api call, both request and response.
+Note: Log level used is **info**.
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/transbank-oneclick/fork )

@@ -29,6 +29,13 @@ module Transbank
         self.action = action
         self.attributes = Hash[*xml_result.map{|e| [e.name.underscore.to_sym, e.text]}.flatten]
         self.errors = []
+
+        logger = Transbank::Oneclick.configuration.logger
+        if logger
+          logger.info "Transbank #{action} response"
+          logger.info doc.to_s
+        end
+
         validate!
       end
 

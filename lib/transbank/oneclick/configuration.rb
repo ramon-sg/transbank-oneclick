@@ -7,6 +7,7 @@ module Transbank
       attr_accessor :server_cert_path
       attr_accessor :rescue_exceptions
       attr_accessor :http_options
+      attr_accessor :logger
 
       def initialize
         self.rescue_exceptions = [Net::ReadTimeout, Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadGateway,
